@@ -25,10 +25,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="brand" href="#">Netflix OSS RSS Reader</a>
+            <a class="brand" href="/">Netflix OSS RSS Reader</a>
 
             <div class="nav-collapse collapse">
-                <form class="navbar-form pull-right" method="POST" action="/jsp/rss.jsp">
+                <form class="navbar-form pull-right" method="POST" action="/">
                     <input class="span8" type="text" placeholder="Enter the feed Url" name="url">
                     <button type="submit" class="btn">Add</button>
                 </form>
@@ -57,8 +57,13 @@
             <h4>${rss.title} <a href="?delFeedUrl=${rss.url?url("UTF8")}"><i class="icon-remove"></i> </a></h4>
             <#list rss.items as item>
                 <#if item_index gte 4><#break></#if>
+                <#if item.description?length lt 800>
+                    <#assign len=item.description?length>
+                <#else>
+                    <#assign len=800>
+                </#if>
                 <p id="item${itemIndex}" data-container="body"
-                   data-content="${item.description?replace("\"", "'")}"
+                   data-content="${item.description?replace("\"", "'")?substring(0, len)}"
                    data-trigger="hover" data-placement="right" data-html="true">
                     <a href="${item.link}">${item.title}</a></p>
                 <#assign itemIndex=itemIndex+1>

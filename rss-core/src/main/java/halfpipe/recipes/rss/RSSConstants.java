@@ -37,7 +37,7 @@ public class RSSConstants {
 	public static final String MIDDLETIER_WEB_RESOURCE_GET_PATH  = "get";
     
     // Rest Client
-    public static final String MIDDLETIER_REST_CLIENT = "middletier-client";
+    public static final String MIDDLETIER_REST_CLIENT = "middletierClient";
 
     // Default user name
     public static final String DEFUALT_USER = "default";

@@ -15,6 +15,7 @@
  */
 package halfpipe.recipes.rss;
 
+import com.netflix.config.ConfigurationManager;
 import halfpipe.Application;
 import halfpipe.recipes.rss.view.ViewContext;
 
@@ -26,6 +27,13 @@ import halfpipe.recipes.rss.view.ViewContext;
 public class EdgeApp extends Application<Context> {
 
 	public static void main(final String[] args) throws Exception {
+        //TODO: move to configuration
+        ConfigurationManager.getConfigInstance().setProperty("middletierClient.ribbon.OkToRetryOnAllOperations", "false");
+        ConfigurationManager.getConfigInstance().setProperty("middletierClient.ribbon.ConnectTimeout", "100000");
+        ConfigurationManager.getConfigInstance().setProperty("middletierClient.ribbon.ReadTimeout", "100000");
+        //ConfigurationManager.getConfigInstance().setProperty("middletierClient.ribbon.listOfServers", "localhost:9191");
+        ConfigurationManager.getConfigInstance().setProperty("hystrix.command.RSSGet.execution.isolation.thread.timeoutInMilliseconds", "100000");
+        ConfigurationManager.getConfigInstance().setProperty("hystrix.command.RSSAdd.execution.isolation.thread.timeoutInMilliseconds", "100000");
 		new EdgeApp().run(args);
 	}
 

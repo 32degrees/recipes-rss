@@ -1,5 +1,6 @@
 package halfpipe.recipes.rss;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import halfpipe.configuration.Configuration;
 import org.springframework.stereotype.Component;
 
@@ -10,4 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EdgeConfiguration extends Configuration {
+
+    @JsonProperty
+    public RestClientConfiguration middleTierClient;
 }
