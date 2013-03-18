@@ -1,0 +1,9 @@
+appName: RSS Edge App
+
+http:
+  port: 9090
+  viewPattern: /*
+  resourcePattern: /ws*
+
+logging:
+  level: WARN
