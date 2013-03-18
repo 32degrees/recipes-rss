@@ -17,20 +17,15 @@ package halfpipe.recipes.rss.resources;
 
 import com.yammer.metrics.annotation.Timed;
 import halfpipe.logging.Log;
-import halfpipe.recipes.rss.Subscriptions;
+import halfpipe.recipes.rss.model.Subscriptions;
 import halfpipe.recipes.rss.manager.RSSManager;
-import com.netflix.servo.DefaultMonitorRegistry;
-import com.netflix.servo.monitor.*;
-import com.netflix.servo.stats.StatsConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URLDecoder;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Rest entry points for fetching/adding/deleting RSS feeds.
@@ -40,6 +35,9 @@ import java.util.concurrent.TimeUnit;
 @Path("/middletier")
 public class MiddleTierResource {
     private static final Log LOG = Log.forThisClass();
+    
+    @Inject
+    RSSManager rssManager;
 
     @GET
     @Path("/rss/user/{user}")
@@ -47,7 +45,7 @@ public class MiddleTierResource {
     @Timed
     public Response fetchSubscriptions (final @PathParam("user") String user) {
         try {
-            Subscriptions subscriptions = RSSManager.getInstance().getSubscriptions(user);
+            Subscriptions subscriptions = rssManager.getSubscriptions(user);
             return Response.ok(subscriptions).build();
         } catch (Exception e) {
             LOG.error("Exception occurred when fetching subscriptions", e);
@@ -64,7 +62,7 @@ public class MiddleTierResource {
             final @PathParam("user") String user) {
         try {
             String decodedUrl = URLDecoder.decode(url, "UTF-8");
-            RSSManager.getInstance().addSubscription(user, decodedUrl);
+            rssManager.addSubscription(user, decodedUrl);
 
             return Response.ok().build();
         } catch (Exception e) {
@@ -81,7 +79,7 @@ public class MiddleTierResource {
             final @PathParam("user") String user) {
         try {
             String decodedUrl = URLDecoder.decode(url, "UTF-8");
-            RSSManager.getInstance().deleteSubscription(user, decodedUrl);
+            rssManager.deleteSubscription(user, decodedUrl);
 
             return Response.ok().build();
         } catch (Exception e) {

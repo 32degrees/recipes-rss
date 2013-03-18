@@ -15,8 +15,8 @@
  */
 package halfpipe.recipes.rss.impl;
 
-import halfpipe.recipes.rss.RSS;
-import halfpipe.recipes.rss.RSSItem;
+import halfpipe.recipes.rss.model.RSS;
+import halfpipe.recipes.rss.model.RSSItem;
 
 import javax.xml.bind.annotation.*;
 import java.util.List;

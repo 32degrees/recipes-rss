@@ -13,30 +13,25 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package halfpipe.recipes.rss;
+package halfpipe.recipes.rss.model;
 
-import java.util.List;
-
-/**
- * Represents a RSS feed
- * 
- * @author ppadmanabhan
- *
+/*
+ * Represents each item (story) within a RSS feed
  */
-public interface RSS {
+public interface RSSItem {
 
     /**
-     * RSS Feed url
-     */
-    String getUrl();
-
-    /**
-     * Return the title of the RSS feed
+     * The title of the item
      */
     String getTitle();
     
     /**
-     * Returns the list of items of the RSS feed
+     * Link to the actual story
      */
-    List<RSSItem> getItems();
+    String getLink();
+    
+    /**
+     * Description of the item
+     */
+    String getDescription();    
 }

@@ -5,7 +5,7 @@ import com.netflix.karyon.spi.HealthCheckHandler;
 public class MiddleTierHealthCheckHandler implements HealthCheckHandler {
 
     public int getStatus() {
-        return RSSManager.getInstance().getStatus();
+        return 0;//TODO: RSSManager.getInstance().getStatus();
     }
 
 }

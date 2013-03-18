@@ -15,43 +15,39 @@
  */
 package halfpipe.recipes.rss.manager;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
+import com.netflix.client.ClientFactory;
+import com.netflix.karyon.spi.HealthCheckHandler;
+import com.netflix.niws.client.http.HttpClientRequest;
+import com.netflix.niws.client.http.HttpClientResponse;
+import com.netflix.niws.client.http.RestClient;
+import halfpipe.logging.Log;
+import halfpipe.recipes.rss.*;
+import halfpipe.recipes.rss.impl.RSSImpl;
+import halfpipe.recipes.rss.impl.RSSItemImpl;
+import halfpipe.recipes.rss.impl.SubscriptionsImpl;
+import halfpipe.recipes.rss.model.RSS;
+import halfpipe.recipes.rss.model.RSSItem;
+import halfpipe.recipes.rss.model.RSSStore;
+import halfpipe.recipes.rss.model.Subscriptions;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.netflix.client.ClientFactory;
-import com.netflix.config.DynamicPropertyFactory;
-import com.netflix.karyon.spi.HealthCheckHandler;
-import com.netflix.niws.client.http.HttpClientRequest;
-import com.netflix.niws.client.http.HttpClientResponse;
-import com.netflix.niws.client.http.RestClient;
-import halfpipe.recipes.rss.RSS;
-import halfpipe.recipes.rss.RSSConstants;
-import halfpipe.recipes.rss.RSSItem;
-import halfpipe.recipes.rss.RSSStore;
-import halfpipe.recipes.rss.Subscriptions;
-import halfpipe.recipes.rss.impl.CassandraStoreImpl;
-import halfpipe.recipes.rss.impl.InMemoryStoreImpl;
-import halfpipe.recipes.rss.impl.RSSImpl;
-import halfpipe.recipes.rss.impl.RSSItemImpl;
-import halfpipe.recipes.rss.impl.SubscriptionsImpl;
+import javax.inject.Inject;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * RSS Manager that
@@ -61,13 +57,14 @@ import halfpipe.recipes.rss.impl.SubscriptionsImpl;
  *      a) Cassandra using Astyanax (or)
  *      b) InMemoryStore
  */
+@Service
 public class RSSManager implements HealthCheckHandler {
+    private static final Log LOG = Log.forThisClass();
 
+    @Inject
     private RSSStore store;
-    private static final Logger logger = LoggerFactory.getLogger(RSSManager.class);
-    private static final RSSManager instance = new RSSManager();
-    
-    private RSSManager() {
+
+    /*private RSSManager() {
         if (RSSConstants.RSS_STORE_CASSANDRA.equals(
                 DynamicPropertyFactory.getInstance().getStringProperty(RSSConstants.RSS_STORE, RSSConstants.RSS_STORE_CASSANDRA).get())) {
             //store = new CassandraStoreImpl();
@@ -75,11 +72,7 @@ public class RSSManager implements HealthCheckHandler {
         } else {
             store = new InMemoryStoreImpl();
         }
-    }
-
-    public static RSSManager getInstance() {
-        return instance;
-    }
+    }*/
 
     /**
      * Fetches the User subscriptions
@@ -88,7 +81,7 @@ public class RSSManager implements HealthCheckHandler {
         List<String> feedUrls = store.getSubscribedUrls(userId);
         List<RSS> feeds = new ArrayList<RSS>(feedUrls.size());
         for (String feedUrl: feedUrls) {
-            RSS rss = RSSManager.getInstance().fetchRSSFeed(feedUrl);
+            RSS rss = fetchRSSFeed(feedUrl);
             if (rss.getItems() != null && !rss.getItems().isEmpty()) {
                 feeds.add(rss);
             }
@@ -128,12 +121,12 @@ public class RSSManager implements HealthCheckHandler {
 
             if (response != null) {
                 rssData  = IOUtils.toString(response.getRawEntity(), Charsets.UTF_8);
-                logger.info("Status code for " + response.getRequestedURI() + " : " + response.getStatus());
+                LOG.info("Status code for " + response.getRequestedURI() + " : " + response.getStatus());
             }
         } catch (URISyntaxException e) {
-            logger.error("Exception occurred when setting the URI", e);
+            LOG.error("Exception occurred when setting the URI", e);
         } catch (Exception e) {
-            logger.error("Exception occurred when executing the HTTP request", e);
+            LOG.error("Exception occurred when executing the HTTP request", e);
         }
 
         return parseRSS(url, rssData);
@@ -167,12 +160,12 @@ public class RSSManager implements HealthCheckHandler {
                 rssItems = new RSSImpl(url, title, items);
                 
             } catch (SAXException e) {
-                logger.error("Exception occurred during parsing the RSS feed", e);
+                LOG.error("Exception occurred during parsing the RSS feed", e);
             } catch (IOException e) {
-                logger.error("Exception occurred during fetching the RSS feed", e);
+                LOG.error("Exception occurred during fetching the RSS feed", e);
             }
         } catch (ParserConfigurationException e) {
-            logger.error("Exception occurred during parsing the RSS feed", e);
+            LOG.error("Exception occurred during parsing the RSS feed", e);
         }
 
         if (rssItems == null) {

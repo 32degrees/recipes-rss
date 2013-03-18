@@ -13,25 +13,26 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package halfpipe.recipes.rss;
+package halfpipe.recipes.rss.model;
 
-/*
- * Represents each item (story) within a RSS feed
+import java.util.List;
+
+/**
+ * Represents a User and a list of subscribed feeds
+ * 
+ * @author ppadmanabhan
+ *
  */
-public interface RSSItem {
+public interface Subscriptions {
 
     /**
-     * The title of the item
+     * UUID of the user
      */
-    String getTitle();
+    String getUser();
     
     /**
-     * Link to the actual story
+     * List of the subscribed RSS feeds along with its contents 
      */
-    String getLink();
+    List<RSS> getSubscriptions();
     
-    /**
-     * Description of the item
-     */
-    String getDescription();    
 }

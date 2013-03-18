@@ -6,4 +6,4 @@ http:
   resourcePattern: /*
 
 logging:
-  level: INFO
+  level: WARN

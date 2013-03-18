@@ -15,7 +15,7 @@
  */
 package halfpipe.recipes.rss.impl;
 
-import halfpipe.recipes.rss.RSSItem;
+import halfpipe.recipes.rss.model.RSSItem;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

@@ -1,4 +1,4 @@
-package halfpipe.recipes.rss;
+package halfpipe.recipes.rss.model;
 
 import java.util.List;
 

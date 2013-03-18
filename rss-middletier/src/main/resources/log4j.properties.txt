@@ -1,4 +1,5 @@
-log4j.rootLogger=INFO,stdout,R
+#TODO: integrate netflix logging
+log4j.rootLogger=WARN,stdout,R
 
 # stdout
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender

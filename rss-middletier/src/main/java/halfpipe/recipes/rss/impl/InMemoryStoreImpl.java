@@ -1,12 +1,14 @@
 package halfpipe.recipes.rss.impl;
 
-import halfpipe.recipes.rss.RSSStore;
+import halfpipe.recipes.rss.model.RSSStore;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class InMemoryStoreImpl implements RSSStore {
 
     // Maintain the same data model as Cassandra

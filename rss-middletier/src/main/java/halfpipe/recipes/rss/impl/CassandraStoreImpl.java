@@ -15,7 +15,7 @@ import com.netflix.astyanax.serializers.StringSerializer;
 import com.netflix.astyanax.thrift.ThriftFamilyFactory;
 import com.netflix.config.DynamicPropertyFactory;
 import halfpipe.recipes.rss.RSSConstants;
-import halfpipe.recipes.rss.RSSStore;
+import halfpipe.recipes.rss.model.RSSStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
