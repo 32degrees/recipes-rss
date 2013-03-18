@@ -2,25 +2,35 @@
 ext.githubProjectName = rootProject.name // Change if github project name is not the same as the root project's name
 
 buildscript {
-    repositories { mavenCentral() }
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
     apply from: file('gradle/buildscript.gradle'), to: buildscript 
 }
 
 allprojects {
-    repositories { mavenCentral() }
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
 }
 
 apply from: file('gradle/convention.gradle')
 apply from: file('gradle/maven.gradle')
-apply from: file('gradle/check.gradle')
-apply from: file('gradle/license.gradle')
-apply from: file('gradle/release.gradle')
+//apply from: file('gradle/check.gradle')
+//apply from: file('gradle/license.gradle')
+//apply from: file('gradle/release.gradle')
 
 subprojects {
-    group = "com.netflix.${githubProjectName}" // TEMPLATE: Set to organization of project
+    group = "net.thirty2.${githubProjectName}" // TEMPLATE: Set to organization of project
+
+    configurations {
+        all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
 
     dependencies {
-        compile 'org.slf4j:slf4j-api:1.7.2'
+        //compile 'org.slf4j:slf4j-api:1.7.2'
         compile 'io.netty:netty:3.6.1.Final'
         compile 'com.netflix.servo:servo-core:0.4.32'
         compile 'com.google.guava:guava:11.0.2'
@@ -35,11 +45,6 @@ subprojects {
         compile 'com.sun.jersey.contribs:jersey-guice:1.13'
         compile 'com.netflix.eureka:eureka-client:1.1.73'
         compile 'com.netflix.blitz4j:blitz4j:1.21'
-        compile 'jetty:jetty:6.0.2'
-        compile 'jetty:servlet-api:2.5-6.0.2'
-        compile 'jetty:jetty-util:6.0.2'
-        compile 'jetty:jsp:2.1-6.0.2'
-        compile 'jetty:jsp-api:2.1-6.0.2'
         compile 'com.netflix.hystrix:hystrix-core:1.2.5'
         compile 'com.netflix.hystrix:hystrix-metrics-event-stream:1.2.5'
         compile 'com.netflix.hystrix:hystrix-servo-metrics-publisher:1.2.5'
@@ -52,7 +57,11 @@ subprojects {
         testCompile 'junit:junit:4.10'
         testCompile 'log4j:log4j:1.2.16'
 
-        runtime 'org.slf4j:slf4j-log4j12:1.6.1'
+        compile('net.thirty2.halfpipe:halfpipe-core:1.0.0-SNAPSHOT') {
+            transitive = true
+        }
+
+        //runtime 'org.slf4j:slf4j-log4j12:1.6.1'
         runtime 'org.apache.maven.plugins:maven-antrun-plugin:1.6'
     }
 }
@@ -79,7 +88,7 @@ project(':rss-middletier') {
 
     jar {
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-        manifest { attributes 'Main-Class': 'com.netflix.recipes.rss.server.MiddleTierServer' }
+        manifest { attributes 'Main-Class': 'halfpipe.recipes.rss.server.MiddleTierServer' }
     }
 }
 
@@ -95,6 +104,6 @@ project(':rss-edge') {
 
     jar {
         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-        manifest { attributes 'Main-Class': 'com.netflix.recipes.rss.server.EdgeServer' }
+        manifest { attributes 'Main-Class': 'halfpipe.recipes.rss.server.EdgeServer' }
     }
 }

@@ -1,0 +1,9 @@
+appName: RSS Middle Tier App
+
+http:
+  port: 9191
+  viewPattern: /view/*
+  resourcePattern: /*
+
+logging:
+  level: INFO

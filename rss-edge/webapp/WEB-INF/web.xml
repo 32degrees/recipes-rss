@@ -35,7 +35,7 @@
         </init-param>
         <init-param>
         	<param-name>com.sun.jersey.config.property.packages</param-name>
-        	<param-value>com.netflix.recipes.rss.jersey.resources</param-value>
+        	<param-value>halfpipe.recipes.rss.resources</param-value>
     	</init-param>
         <init-param>
             <param-name>com.sun.jersey.config.property.WebPageContentRegex</param-name>

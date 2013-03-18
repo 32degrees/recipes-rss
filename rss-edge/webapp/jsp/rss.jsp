@@ -16,10 +16,10 @@
  */
 %>
 <%@page import="com.netflix.hystrix.HystrixCommand"%>
-<%@page import="com.netflix.recipes.rss.hystrix.AddRSSCommand"%>
-<%@page import="com.netflix.recipes.rss.hystrix.DeleteRSSCommand"%>
+<%@page import="halfpipe.recipes.rss.hystrix.AddRSSCommand"%>
+<%@page import="halfpipe.recipes.rss.hystrix.DeleteRSSCommand"%>
 
-<%@ page import="com.netflix.recipes.rss.hystrix.GetRSSCommand" %>
+<%@ page import="halfpipe.recipes.rss.hystrix.GetRSSCommand" %>
 <%@ page import="org.json.JSONArray" %>
 <%@ page import="org.json.JSONObject" %>
 <%@ page import="java.net.URLEncoder" %>

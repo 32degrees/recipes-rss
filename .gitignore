@@ -3,3 +3,10 @@
 /.project
 /.gradle
 /build
+.idea
+*.sqp
+logs
+out
+*.log
+tree.txt
+*.iml
