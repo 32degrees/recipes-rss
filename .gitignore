@@ -10,3 +10,5 @@ out
 *.log
 tree.txt
 *.iml
+*.ipr
+*.iws
