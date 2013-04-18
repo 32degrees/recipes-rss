@@ -19,6 +19,7 @@ import com.yammer.metrics.annotation.Timed;
 import halfpipe.logging.Log;
 import halfpipe.recipes.rss.model.Subscriptions;
 import halfpipe.recipes.rss.manager.RSSManager;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -34,7 +35,7 @@ import java.net.URLDecoder;
 @Component
 @Path("/middletier")
 public class MiddleTierResource {
-    private static final Log LOG = Log.forThisClass();
+    private static final Logger LOG = Log.forThisClass();
     
     @Inject
     RSSManager rssManager;

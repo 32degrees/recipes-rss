@@ -31,6 +31,7 @@ import halfpipe.recipes.rss.model.RSSStore;
 import halfpipe.recipes.rss.model.Subscriptions;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -59,7 +60,7 @@ import java.util.List;
  */
 @Service
 public class RSSManager implements HealthCheckHandler {
-    private static final Log LOG = Log.forThisClass();
+    private static final Logger LOG = Log.forThisClass();
 
     @Inject
     private RSSStore store;

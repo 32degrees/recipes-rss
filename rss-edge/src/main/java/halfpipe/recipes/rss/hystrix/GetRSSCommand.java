@@ -16,6 +16,7 @@
 package halfpipe.recipes.rss.hystrix;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
 import com.netflix.client.ClientFactory;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
@@ -25,8 +26,10 @@ import com.netflix.niws.client.http.HttpClientRequest;
 import com.netflix.niws.client.http.HttpClientRequest.Verb;
 import com.netflix.niws.client.http.HttpClientResponse;
 import com.netflix.niws.client.http.RestClient;
+import halfpipe.logging.Log;
 import halfpipe.recipes.rss.RSSConstants;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
 
 import java.net.URI;
 
@@ -34,6 +37,8 @@ import java.net.URI;
  * Calls the middle tier Get RSS entry point
  */
 public class GetRSSCommand extends HystrixCommand<String> {
+    private static final Logger LOG = Log.forThisClass();
+
 	public GetRSSCommand() {
         super (
             Setter.withGroupKey(
@@ -51,8 +56,7 @@ public class GetRSSCommand extends HystrixCommand<String> {
 			// configuration specified in the edge.properties file
 			RestClient client = (RestClient) ClientFactory.getNamedClient(RSSConstants.MIDDLETIER_REST_CLIENT);
 
-			HttpClientRequest request = HttpClientRequest
-					.newBuilder()
+			HttpClientRequest request = HttpClientRequest.newBuilder()
 					.setVerb(Verb.GET)
 					.setUri(new URI("/"
 							+ RSSConstants.MIDDLETIER_WEB_RESOURCE_ROOT_PATH
@@ -62,14 +66,15 @@ public class GetRSSCommand extends HystrixCommand<String> {
 			HttpClientResponse response = client.executeWithLoadBalancer(request);
 
 			return IOUtils.toString(response.getRawEntity(), Charsets.UTF_8);
-		} catch (Exception exc) {
-			throw new RuntimeException("Exception", exc);
+		} catch (Exception e) {
+            Throwables.propagate(e);
 		}
+        return null;
 	}
 
 	@Override
 	protected String getFallback() {
-        // Empty json
-		return "{}";
+        LOG.warn("calling fallback");
+		return "{ \"user\": \"default\", \"subscriptions\": [ { \"url\": \"/\", \"title\": \"RSS Reader News\", \"items\": [ { \"title\": \"This is default data for RSS Reader\", \"link\": \"/\", \"description\": \"For some reason, RSS Reader Edge app couldn't find your rss feeds.  Here is something to look at in the meantime.\" } ] } ] }";
 	}
 }

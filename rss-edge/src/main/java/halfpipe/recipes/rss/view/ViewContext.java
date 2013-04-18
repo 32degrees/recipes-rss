@@ -13,7 +13,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 /**
- * User: gibbsb
+ * User: spencergibb
  * Date: 3/17/13
  * Time: 11:25 PM
  */
@@ -25,13 +25,8 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 //TODO: @EnableMetrics
 @Import({MetricsContext.class})
 public class ViewContext extends AbstractViewContext {
-    //TODO: is this needed, can I set a welcome page?
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/static/index.html");
-    }
 
-    //TODO: import FreeMarkerContext?
+    //TODO: @EnableFreemarker?
     @Bean
     public FreeMarkerConfigurer freeMarkerConfigurer() {
         FreeMarkerConfigurer config = new FreeMarkerConfigurer();

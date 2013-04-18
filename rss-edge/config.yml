@@ -8,6 +8,45 @@ http:
 logging:
   level: WARN
 
+# MiddleTier Netflix Ribbon Client Configuration
+#
+# https://github.com/Netflix/ribbon/wiki/Getting-Started
+# https://github.com/Netflix/ribbon/wiki/Programmers-Guide
+#
+
 middletierClient:
   ribbon:
+# use eureka to derive the list of servers
+    #NIWSServerListClassName=com.netflix.niws.loadbalancer.DiscoveryEnabledNIWSServerList
     listOfServers: localhost:9191
+# Interval to refresh the server list from the source
+    ServerListRefreshInterval: 2000
+# Whether all operations can be retried for this client
+    OkToRetryOnAllOperations: true
+# Connect timeout used by Apache HttpClient
+    ConnectTimeout: 3000
+# Read timeout used by Apache HttpClient
+    ReadTimeout: 3000
+# Max number of retries on the same server (excluding the first try)
+    MaxAutoRetries: 1
+# Max number of next servers to retry (excluding the first server)
+    MaxAutoRetriesNextServer: 1
+
+hystrix:
+  command:
+    RSSGet:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+    RSSAdd:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+    RSSGet:
+      execution:
+        isolation:
+          thread:
+#            timeoutInMilliseconds: 2000
+            timeoutInMilliseconds: 20000

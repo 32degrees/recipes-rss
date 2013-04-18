@@ -11,7 +11,4 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EdgeConfiguration extends Configuration {
-
-    @JsonProperty
-    public RestClientConfiguration middleTierClient;
 }

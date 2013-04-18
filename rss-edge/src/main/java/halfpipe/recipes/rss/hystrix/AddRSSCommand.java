@@ -16,6 +16,7 @@
 package halfpipe.recipes.rss.hystrix;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
 import com.netflix.client.ClientFactory;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
@@ -25,8 +26,10 @@ import com.netflix.niws.client.http.HttpClientRequest;
 import com.netflix.niws.client.http.HttpClientRequest.Verb;
 import com.netflix.niws.client.http.HttpClientResponse;
 import com.netflix.niws.client.http.RestClient;
+import halfpipe.logging.Log;
 import halfpipe.recipes.rss.RSSConstants;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
 
 import java.net.URI;
 
@@ -34,6 +37,7 @@ import java.net.URI;
  * Calls the middle tier Add RSS entry point
  */
 public class AddRSSCommand extends HystrixCommand<String> {
+    private static final Logger LOG = Log.forThisClass();
 
     // RSS Feed Url (encoded)
     private final String url;
@@ -58,8 +62,7 @@ public class AddRSSCommand extends HystrixCommand<String> {
 			 */
 			RestClient client = (RestClient) ClientFactory.getNamedClient(RSSConstants.MIDDLETIER_REST_CLIENT);
 
-			HttpClientRequest request = HttpClientRequest
-					.newBuilder()
+			HttpClientRequest request = HttpClientRequest.newBuilder()
 					.setVerb(Verb.POST)
 					.setUri(new URI("/"
 							+ RSSConstants.MIDDLETIER_WEB_RESOURCE_ROOT_PATH
@@ -69,13 +72,15 @@ public class AddRSSCommand extends HystrixCommand<String> {
 			HttpClientResponse response = client.executeWithLoadBalancer(request);
 
 			return IOUtils.toString(response.getRawEntity(), Charsets.UTF_8);
-		} catch (Exception exc) {
-			throw new RuntimeException("Exception occurred when adding a RSS feed", exc);
-		}
+		} catch (Exception e) {
+            Throwables.propagate(e);
+        }
+        return null;
 	}
 
 	@Override
 	protected String getFallback() {
+        LOG.warn("calling fallback");
         // Empty json
 		return "{}";
 	}
